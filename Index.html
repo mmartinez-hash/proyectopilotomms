@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rocket S.A. | Consultoría, Ventas, Marketing e IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-1:#0a0a2e;
+    --bg-2:#16123a;
+    --bg-3:#1f1550;
+    --neon-cyan:#00f0ff;
+    --neon-pink:#ff2e9a;
+    --neon-orange:#ff7a1a;
+    --neon-gold:#ffd23f;
+    --neon-purple:#a742ff;
+    --white:#f5f6ff;
+    --glass: rgba(255,255,255,0.06);
+    --glass-border: rgba(255,255,255,0.14);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    font-family:'Poppins',sans-serif;
+    background: radial-gradient(ellipse at top, var(--bg-3), var(--bg-1) 60%);
+    color:var(--white);
+    overflow-x:hidden;
+    position:relative;
+    min-height:100vh;
+  }
+
+  h1,h2,h3,.logo{font-family:'Orbitron',sans-serif;}
+
+  ::selection{ background:var(--neon-pink); color:#fff; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar{width:10px;}
+  ::-webkit-scrollbar-track{background:var(--bg-1);}
+  ::-webkit-scrollbar-thumb{background:linear-gradient(var(--neon-cyan),var(--neon-pink));border-radius:10px;}
+
+  /* ---------- STARFIELD ---------- */
+  #stars, #stars2, #stars3{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+  }
+  .star{
+    position:absolute; background:#fff; border-radius:50%;
+    animation: twinkle 3s infinite ease-in-out;
+  }
+  @keyframes twinkle{
+    0%,100%{opacity:.2; transform:scale(1);}
+    50%{opacity:1; transform:scale(1.4);}
+  }
+
+  .blob{
+    position:fixed; border-radius:50%; filter:blur(90px); opacity:.35; z-index:0; pointer-events:none;
+    animation: float 18s ease-in-out infinite;
+  }
+  .blob1{ width:480px;height:480px; background:var(--neon-purple); top:-150px; left:-150px; }
+  .blob2{ width:420px;height:420px; background:var(--neon-cyan); bottom:-180px; right:-120px; animation-delay:3s; }
+  .blob3{ width:380px;height:380px; background:var(--neon-pink); top:40%; left:60%; animation-delay:6s; }
+
+  @keyframes float{
+    0%,100%{ transform:translate(0,0) scale(1); }
+    33%{ transform:translate(40px,-40px) scale(1.08); }
+    66%{ transform:translate(-30px,30px) scale(0.95); }
+  }
+
+  section, header, footer{ position:relative; z-index:2; }
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 6%;
+    background:rgba(10,10,46,0.55);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--glass-border);
+    transition:.3s;
+  }
+  .logo{
+    font-size:1.5rem; font-weight:900; letter-spacing:1px;
+    background:linear-gradient(90deg,var(--neon-cyan),var(--neon-pink),var(--neon-orange));
+    background-size:200% auto;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation: gradientMove 4s linear infinite;
+    display:flex; align-items:center; gap:10px;
+  }
+  .logo .rocket-emoji{ display:inline-block; animation: wiggle 2.5s ease-in-out infinite; filter:drop-shadow(0 0 8px var(--neon-orange)); }
+  @keyframes wiggle{ 0%,100%{transform:rotate(0deg) translateY(0);} 25%{transform:rotate(-8deg) translateY(-2px);} 75%{transform:rotate(8deg) translateY(-2px);} }
+  @keyframes gradientMove{ to{ background-position:200% center; } }
+
+  .nav-links{ display:flex; gap:34px; list-style:none; }
+  .nav-links a{
+    color:var(--white); text-decoration:none; font-weight:500; font-size:.95rem;
+    position:relative; opacity:.85; transition:.25s;
+  }
+  .nav-links a::after{
+    content:''; position:absolute; left:0; bottom:-6px; width:0; height:2px;
+    background:linear-gradient(90deg,var(--neon-cyan),var(--neon-pink)); transition:.3s;
+  }
+  .nav-links a:hover{ opacity:1; }
+  .nav-links a:hover::after{ width:100%; }
+
+  .nav-cta{
+    padding:10px 22px; border-radius:40px; border:none; cursor:pointer;
+    background:linear-gradient(90deg,var(--neon-pink),var(--neon-orange));
+    color:#fff; font-weight:600; font-size:.9rem;
+    box-shadow:0 0 20px rgba(255,46,154,.5);
+    transition:.3s;
+  }
+  .nav-cta:hover{ transform:translateY(-2px) scale(1.05); box-shadow:0 0 30px rgba(255,122,26,.8); }
+
+  .burger{ display:none; flex-direction:column; gap:5px; cursor:pointer; z-index:110; }
+  .burger span{ width:26px; height:3px; background:#fff; border-radius:2px; }
+
+  /* ---------- HERO ---------- */
+  header.hero{
+    min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:120px 6% 60px;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:8px 20px; border-radius:40px; border:1px solid var(--glass-border);
+    background:var(--glass); font-size:.8rem; letter-spacing:2px; text-transform:uppercase;
+    color:var(--neon-cyan); margin-bottom:28px;
+    animation: fadeUp 1s ease both;
+  }
+  .dot-pulse{ width:8px;height:8px;border-radius:50%; background:var(--neon-orange); box-shadow:0 0 10px var(--neon-orange); animation:pulse 1.5s infinite; }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.3;} }
+
+  .hero h1{
+    font-size:clamp(2.4rem, 6vw, 5rem); font-weight:900; line-height:1.05; max-width:1000px;
+    animation: fadeUp 1s ease .1s both;
+  }
+  .hero h1 .grad{
+    background:linear-gradient(90deg,var(--neon-cyan),var(--neon-purple),var(--neon-pink),var(--neon-orange),var(--neon-cyan));
+    background-size:300% auto;
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    animation: gradientMove 6s linear infinite;
+  }
+  .hero p.sub{
+    max-width:640px; margin:26px auto 40px; font-size:1.15rem; color:#c9c9f5; font-weight:300;
+    animation: fadeUp 1s ease .25s both;
+  }
+  .hero-ctas{ display:flex; gap:20px; flex-wrap:wrap; justify-content:center; animation: fadeUp 1s ease .4s both; }
+
+  .btn-primary, .btn-ghost{
+    padding:16px 34px; border-radius:50px; font-weight:600; font-size:1rem; cursor:pointer;
+    text-decoration:none; display:inline-flex; align-items:center; gap:10px; transition:.3s;
+  }
+  .btn-primary{
+    border:none; color:#0a0a2e;
+    background:linear-gradient(90deg,var(--neon-cyan),var(--neon-gold));
+    box-shadow:0 0 30px rgba(0,240,255,.4);
+  }
+  .btn-primary:hover{ transform:translateY(-3px) scale(1.04); box-shadow:0 0 45px rgba(255,210,63,.7); }
+  .btn-ghost{
+    border:1.5px solid var(--glass-border); color:#fff; background:var(--glass);
+  }
+  .btn-ghost:hover{ border-color:var(--neon-pink); background:rgba(255,46,154,.12); transform:translateY(-3px); }
+
+  @keyframes fadeUp{ from{ opacity:0; transform:translateY(24px); } to{ opacity:1; transform:translateY(0); } }
+
+  /* Rocket launch signature */
+  .rocket-stage{
+    position:relative; width:100%; max-width:220px; height:280px; margin-top:56px;
+    animation: fadeUp 1.2s ease .55s both;
+  }
+  .rocket-svg{ width:100%; height:100%; position:relative; z-index:2; animation: hover 3.4s ease-in-out infinite; }
+  @keyframes hover{ 0%,100%{ transform:translateY(0) rotate(0deg);} 50%{ transform:translateY(-18px) rotate(-2deg);} }
+  .flame{ transform-origin:center top; animation: flame 0.35s ease-in-out infinite alternate; }
+  @keyframes flame{ from{ transform:scaleY(1) scaleX(1);} to{ transform:scaleY(1.35) scaleX(.85);} }
+  .trail-dot{
+    position:absolute; bottom:-10px; left:50%; width:6px; height:6px; border-radius:50%;
+    background:var(--neon-orange); opacity:0; filter:blur(1px);
+    animation: trail 1.1s ease-in infinite;
+  }
+  @keyframes trail{
+    0%{ opacity:.9; transform:translate(-50%,0) scale(1); }
+    100%{ opacity:0; transform:translate(-50%,140px) scale(.3); }
+  }
+
+  .scroll-cue{
+    position:absolute; bottom:26px; left:50%; transform:translateX(-50%);
+    display:flex; flex-direction:column; align-items:center; gap:8px; font-size:.75rem;
+    letter-spacing:2px; color:#8f8fc9; text-transform:uppercase;
+    animation: bounce 2s infinite;
+  }
+  @keyframes bounce{ 0%,100%{transform:translate(-50%,0);} 50%{transform:translate(-50%,8px);} }
+
+  /* ---------- SECTION HEADINGS ---------- */
+  .section-head{ text-align:center; max-width:680px; margin:0 auto 60px; }
+  .section-head .eyebrow{ margin-bottom:16px; }
+  .section-head h2{ font-size:clamp(1.8rem,4vw,2.8rem); font-weight:800; }
+  .section-head p{ color:#b7b7e8; margin-top:14px; font-weight:300; }
+
+  section{ padding:120px 6%; }
+
+  /* reveal on scroll */
+  .reveal{ opacity:0; transform:translateY(40px); transition:opacity .8s ease, transform .8s ease; }
+  .reveal.show{ opacity:1; transform:translateY(0); }
+
+  /* ---------- SERVICES ---------- */
+  .services-grid{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:30px; max-width:1200px; margin:0 auto;
+  }
+  .service-card{
+    position:relative; padding:38px 30px; border-radius:22px;
+    background:var(--glass); border:1px solid var(--glass-border);
+    overflow:hidden; transition:.4s; cursor:default;
+  }
+  .service-card::before{
+    content:''; position:absolute; inset:0; opacity:0; transition:.4s;
+    background:var(--card-grad);
+  }
+  .service-card:hover::before{ opacity:.16; }
+  .service-card:hover{ transform:translateY(-10px); border-color:var(--card-color); box-shadow:0 20px 50px -20px var(--card-color); }
+  .service-card .icon-wrap{
+    width:64px; height:64px; border-radius:16px; display:flex; align-items:center; justify-content:center;
+    background:var(--card-grad); margin-bottom:22px; font-size:1.7rem;
+    box-shadow:0 10px 30px -10px var(--card-color);
+    transition:.4s;
+  }
+  .service-card:hover .icon-wrap{ transform:rotate(-8deg) scale(1.08); }
+  .service-card h3{ font-size:1.3rem; margin-bottom:12px; font-weight:700; }
+  .service-card p{ color:#bcbce8; font-size:.95rem; line-height:1.6; font-weight:300; margin-bottom:18px;}
+  .service-card ul{ list-style:none; display:flex; flex-direction:column; gap:8px; }
+  .service-card ul li{ font-size:.85rem; color:#d8d8ff; display:flex; align-items:center; gap:8px; }
+  .service-card ul li::before{ content:'✦'; color:var(--card-color); }
+
+  .c1{ --card-color:var(--neon-cyan); --card-grad:linear-gradient(135deg,var(--neon-cyan),#0072ff); }
+  .c2{ --card-color:var(--neon-orange); --card-grad:linear-gradient(135deg,var(--neon-orange),var(--neon-gold)); }
+  .c3{ --card-color:var(--neon-pink); --card-grad:linear-gradient(135deg,var(--neon-pink),var(--neon-purple)); }
+  .c4{ --card-color:var(--neon-purple); --card-grad:linear-gradient(135deg,var(--neon-purple),var(--neon-cyan)); }
+
+  /* ---------- STATS ---------- */
+  .stats{
+    display:flex; flex-wrap:wrap; justify-content:center; gap:60px; text-align:center; max-width:1000px; margin:0 auto;
+  }
+  .stat-num{
+    font-family:'Orbitron',sans-serif; font-size:clamp(2.2rem,5vw,3.4rem); font-weight:900;
+    background:linear-gradient(90deg,var(--neon-cyan),var(--neon-pink));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .stat-label{ color:#b7b7e8; font-size:.9rem; margin-top:6px; letter-spacing:1px; text-transform:uppercase; }
+
+  /* ---------- ABOUT / WHY ---------- */
+  .about-wrap{
+    display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:center; max-width:1200px; margin:0 auto;
+  }
+  .about-visual{
+    position:relative; height:380px; border-radius:26px; overflow:hidden;
+    background:linear-gradient(135deg, rgba(0,240,255,.12), rgba(255,46,154,.12));
+    border:1px solid var(--glass-border);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .orbit{
+    position:relative; width:220px; height:220px;
+  }
+  .orbit-ring{
+    position:absolute; inset:0; border:1.5px dashed rgba(255,255,255,.18); border-radius:50%;
+    animation: spin 14s linear infinite;
+  }
+  .orbit-ring.r2{ inset:-40px; animation-duration:20s; animation-direction:reverse; }
+  .orbit-ring.r3{ inset:-80px; animation-duration:28s; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .orbit-core{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:74px; height:74px; border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #fff, var(--neon-orange) 60%, var(--neon-pink));
+    box-shadow:0 0 60px rgba(255,122,26,.7);
+  }
+  .orbit-sat{
+    position:absolute; width:20px; height:20px; border-radius:50%; top:-10px; left:50%;
+    transform:translateX(-50%);
+  }
+  .about-text h2{ font-size:clamp(1.8rem,4vw,2.6rem); font-weight:800; margin-bottom:20px; }
+  .about-text p{ color:#c2c2ef; font-weight:300; line-height:1.7; margin-bottom:26px; }
+  .check-list{ display:flex; flex-direction:column; gap:16px; }
+  .check-list div{ display:flex; gap:14px; align-items:flex-start; }
+  .check-ico{
+    min-width:30px; height:30px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(135deg,var(--neon-cyan),var(--neon-purple)); font-size:.9rem;
+  }
+
+  /* ---------- CTA BAND ---------- */
+  .cta-band{
+    max-width:1100px; margin:0 auto; padding:70px 6%; border-radius:30px; text-align:center;
+    background:linear-gradient(120deg, rgba(0,240,255,.14), rgba(167,66,255,.16), rgba(255,46,154,.14));
+    border:1px solid var(--glass-border); position:relative; overflow:hidden;
+  }
+  .cta-band h2{ font-size:clamp(1.7rem,4vw,2.5rem); font-weight:800; margin-bottom:18px; }
+  .cta-band p{ color:#d0d0ff; margin-bottom:32px; font-weight:300; }
+
+  /* ---------- CONTACT ---------- */
+  .contact-wrap{
+    display:grid; grid-template-columns:1fr 1fr; gap:60px; max-width:1100px; margin:0 auto;
+  }
+  .contact-form{
+    background:var(--glass); border:1px solid var(--glass-border); border-radius:22px; padding:40px;
+    display:flex; flex-direction:column; gap:18px;
+  }
+  .contact-form input, .contact-form textarea, .contact-form select{
+    width:100%; padding:14px 16px; border-radius:12px; border:1px solid var(--glass-border);
+    background:rgba(255,255,255,.05); color:#fff; font-family:'Poppins',sans-serif; font-size:.95rem;
+    outline:none; transition:.25s;
+  }
+  .contact-form input:focus, .contact-form textarea:focus, .contact-form select:focus{
+    border-color:var(--neon-cyan); box-shadow:0 0 0 3px rgba(0,240,255,.15);
+  }
+  .contact-form textarea{ resize:vertical; min-height:110px; }
+  .contact-form label{ font-size:.82rem; color:#b7b7e8; margin-bottom:-10px; }
+  .contact-form button{ margin-top:10px; align-self:flex-start; }
+
+  .contact-info{ display:flex; flex-direction:column; gap:26px; justify-content:center; }
+  .contact-info h2{ font-size:clamp(1.6rem,3.4vw,2.2rem); font-weight:800; margin-bottom:6px; }
+  .info-row{ display:flex; gap:16px; align-items:center; }
+  .info-ico{
+    min-width:46px; height:46px; border-radius:13px; display:flex; align-items:center; justify-content:center;
+    background:var(--glass); border:1px solid var(--glass-border); font-size:1.2rem;
+  }
+  .info-row span{ color:#cfcff5; font-size:.95rem; }
+
+  .social-row{ display:flex; gap:14px; margin-top:10px; }
+  .social-btn{
+    width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    background:var(--glass); border:1px solid var(--glass-border); color:#fff; text-decoration:none;
+    font-size:1.15rem; transition:.3s;
+  }
+  .social-btn:hover{ transform:translateY(-5px) scale(1.1); }
+  .social-btn.ig:hover{ background:linear-gradient(135deg,#f58529,#dd2a7b,#8134af); border-color:transparent; box-shadow:0 8px 25px rgba(221,42,123,.5); }
+  .social-btn.fb:hover{ background:#1877f2; border-color:transparent; box-shadow:0 8px 25px rgba(24,119,242,.5); }
+  .social-btn.li:hover{ background:#0a66c2; border-color:transparent; box-shadow:0 8px 25px rgba(10,102,194,.5); }
+  .social-btn.x:hover{ background:#000; border-color:transparent; box-shadow:0 8px 25px rgba(255,255,255,.25); }
+  .social-btn.wa:hover{ background:#25d366; border-color:transparent; box-shadow:0 8px 25px rgba(37,211,102,.5); }
+  .social-btn.tk:hover{ background:linear-gradient(135deg,#25f4ee,#000,#fe2c55); border-color:transparent; box-shadow:0 8px 25px rgba(254,44,85,.4); }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    padding:60px 6% 30px; border-top:1px solid var(--glass-border); margin-top:60px;
+  }
+  .footer-grid{
+    display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:40px; max-width:1200px; margin:0 auto 40px;
+  }
+  .footer-grid h4{ font-size:.95rem; margin-bottom:18px; color:#fff; letter-spacing:1px; }
+  .footer-grid p{ color:#a3a3d6; font-size:.88rem; line-height:1.7; font-weight:300; }
+  .footer-grid ul{ list-style:none; display:flex; flex-direction:column; gap:10px; }
+  .footer-grid ul li a{ color:#a3a3d6; text-decoration:none; font-size:.88rem; transition:.2s; }
+  .footer-grid ul li a:hover{ color:var(--neon-cyan); padding-left:4px; }
+  .footer-bottom{
+    text-align:center; color:#7d7dae; font-size:.82rem; padding-top:26px; border-top:1px solid var(--glass-border);
+    max-width:1200px; margin:0 auto;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media(max-width:900px){
+    .about-wrap, .contact-wrap{ grid-template-columns:1fr; }
+    .footer-grid{ grid-template-columns:1fr 1fr; }
+  }
+  @media(max-width:760px){
+    .nav-links, .nav-cta{ display:none; }
+    .burger{ display:flex; }
+    nav.open .nav-links{
+      display:flex; position:fixed; inset:0; top:0; height:100vh; width:100%;
+      background:rgba(10,10,46,0.97); flex-direction:column; align-items:center; justify-content:center; gap:34px;
+      font-size:1.3rem;
+    }
+    nav.open .nav-cta{ display:none; }
+    .footer-grid{ grid-template-columns:1fr; text-align:center; }
+    .info-row{ justify-content:center; }
+    .social-row{ justify-content:center; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
+  }
+
+  a:focus-visible, button:focus-visible{ outline:2px solid var(--neon-cyan); outline-offset:3px; }
+</style>
+</head>
+<body>
+
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
+<div class="blob blob3"></div>
+<div id="stars"></div>
+
+<nav id="navbar">
+  <div class="logo"><span class="rocket-emoji">🚀</span> ROCKET S.A.</div>
+  <ul class="nav-links">
+    <li><a href="#inicio">Inicio</a></li>
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('contacto').scrollIntoView({behavior:'smooth'})">Despegar ahora</button>
+  <div class="burger" id="burger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<header class="hero" id="inicio">
+  <div class="eyebrow"><span class="dot-pulse"></span> Consultoría · Ventas · Marketing · Inteligencia Artificial</div>
+  <h1>Impulsamos tu negocio <span class="grad">a la velocidad de escape</span></h1>
+  <p class="sub">En Rocket S.A. combinamos estrategia, ejecución comercial, marketing de alto impacto e inteligencia artificial para llevar tu empresa más allá de la órbita de tu mercado actual.</p>
+  <div class="hero-ctas">
+    <a href="#servicios" class="btn-primary">🚀 Ver servicios</a>
+    <a href="#contacto" class="btn-ghost">Hablar con un experto</a>
+  </div>
+
+  <div class="rocket-stage">
+    <svg class="rocket-svg" viewBox="0 0 120 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bodyGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="100%" stop-color="#c9d6ff"/>
+        </linearGradient>
+        <linearGradient id="finGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#00f0ff"/>
+          <stop offset="100%" stop-color="#a742ff"/>
+        </linearGradient>
+        <radialGradient id="flameGrad" cx="50%" cy="0%" r="80%">
+          <stop offset="0%" stop-color="#fff59d"/>
+          <stop offset="40%" stop-color="#ff7a1a"/>
+          <stop offset="100%" stop-color="#ff2e9a"/>
+        </radialGradient>
+      </defs>
+      <ellipse cx="60" cy="55" rx="14" ry="16" fill="#00f0ff" opacity="0.85"/>
+      <path d="M60 5 C80 30 88 70 88 110 L32 110 C32 70 40 30 60 5 Z" fill="url(#bodyGrad)"/>
+      <path d="M32 95 L10 130 L32 122 Z" fill="url(#finGrad)"/>
+      <path d="M88 95 L110 130 L88 122 Z" fill="url(#finGrad)"/>
+      <circle cx="60" cy="60" r="10" fill="#0a0a2e"/>
+      <circle cx="60" cy="60" r="6" fill="#ffd23f"/>
+      <rect x="32" y="108" width="56" height="14" rx="4" fill="#ff2e9a"/>
+      <g class="flame">
+        <path d="M45 122 Q60 170 60 190 Q75 170 75 122 Z" fill="url(#flameGrad)"/>
+      </g>
+    </svg>
+    <div class="trail-dot" style="animation-delay:0s; left:44%;"></div>
+    <div class="trail-dot" style="animation-delay:.3s; left:50%;"></div>
+    <div class="trail-dot" style="animation-delay:.6s; left:56%;"></div>
+  </div>
+
+  <div class="scroll-cue">Desliza ↓</div>
+</header>
+
+<section id="servicios">
+  <div class="section-head reveal">
+    <div class="eyebrow" style="justify-content:center;">Nuestro menú de servicios</div>
+    <h2>Cuatro motores, una misión</h2>
+    <p>Elige el módulo que tu empresa necesita o combina varios para un despegue completo.</p>
+  </div>
+
+  <div class="services-grid">
+    <div class="service-card c1 reveal">
+      <div class="icon-wrap">🧭</div>
+      <h3>Consultoría</h3>
+      <p>Diagnóstico estratégico y hojas de ruta claras para escalar decisiones de negocio con datos, no con intuición.</p>
+      <ul>
+        <li>Diagnóstico organizacional</li>
+        <li>Planeamiento estratégico</li>
+        <li>Optimización de procesos</li>
+      </ul>
+    </div>
+
+    <div class="service-card c2 reveal">
+      <div class="icon-wrap">📈</div>
+      <h3>Ventas</h3>
+      <p>Estructuramos y potenciamos tu fuerza comercial con metodologías probadas para cerrar más, más rápido.</p>
+      <ul>
+        <li>Estrategia comercial</li>
+        <li>Entrenamiento de equipos</li>
+        <li>CRM y funnels de venta</li>
+      </ul>
+    </div>
+
+    <div class="service-card c3 reveal">
+      <div class="icon-wrap">🎯</div>
+      <h3>Marketing</h3>
+      <p>Campañas de alto impacto que conectan tu marca con la audiencia correcta, en el canal correcto.</p>
+      <ul>
+        <li>Marketing digital y performance</li>
+        <li>Branding y contenido</li>
+        <li>Gestión de redes sociales</li>
+      </ul>
+    </div>
+
+    <div class="service-card c4 reveal">
+      <div class="icon-wrap">🤖</div>
+      <h3>Inteligencia Artificial</h3>
+      <p>Automatizamos e inteligentizamos tu operación con soluciones de IA hechas a la medida de tu negocio.</p>
+      <ul>
+        <li>Automatización de procesos</li>
+        <li>Chatbots y asistentes IA</li>
+        <li>Analítica predictiva</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="stats reveal">
+    <div>
+      <div class="stat-num">120+</div>
+      <div class="stat-label">Proyectos lanzados</div>
+    </div>
+    <div>
+      <div class="stat-num">98%</div>
+      <div class="stat-label">Clientes satisfechos</div>
+    </div>
+    <div>
+      <div class="stat-num">35</div>
+      <div class="stat-label">Sectores atendidos</div>
+    </div>
+    <div>
+      <div class="stat-num">24/7</div>
+      <div class="stat-label">Soporte con IA</div>
+    </div>
+  </div>
+</section>
+
+<section id="nosotros">
+  <div class="about-wrap">
+    <div class="about-visual reveal">
+      <div class="orbit">
+        <div class="orbit-ring"></div>
+        <div class="orbit-ring r2"></div>
+        <div class="orbit-ring r3"></div>
+        <div class="orbit-core"></div>
+      </div>
+    </div>
+    <div class="about-text reveal">
+      <h2>Somos el combustible de tu crecimiento</h2>
+      <p>Rocket S.A. nace de la unión de consultores, vendedores, creativos e ingenieros de IA que comparten una misma obsesión: convertir el potencial de tu empresa en resultados medibles.</p>
+      <div class="check-list">
+        <div>
+          <div class="check-ico">✓</div>
+          <span>Equipo multidisciplinario con experiencia real de industria.</span>
+        </div>
+        <div>
+          <div class="check-ico">✓</div>
+          <span>Soluciones a medida, no plantillas genéricas.</span>
+        </div>
+        <div>
+          <div class="check-ico">✓</div>
+          <span>Integración de IA en cada servicio para acelerar resultados.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="cta-band reveal">
+    <h2>¿Listo para encender los motores?</h2>
+    <p>Agenda una sesión gratuita y descubre cómo Rocket S.A. puede impulsar tu próxima etapa de crecimiento.</p>
+    <a href="#contacto" class="btn-primary">🚀 Quiero despegar</a>
+  </div>
+</section>
+
+<section id="contacto">
+  <div class="section-head reveal">
+    <div class="eyebrow" style="justify-content:center;">Contacto</div>
+    <h2>Hablemos de tu próximo lanzamiento</h2>
+  </div>
+  <div class="contact-wrap">
+    <form class="contact-form reveal" onsubmit="return handleSubmit(event)">
+      <div>
+        <label>Nombre</label>
+        <input type="text" placeholder="Tu nombre" required>
+      </div>
+      <div>
+        <label>Correo</label>
+        <input type="email" placeholder="tucorreo@empresa.com" required>
+      </div>
+      <div>
+        <label>Servicio de interés</label>
+        <select>
+          <option>Consultoría</option>
+          <option>Ventas</option>
+          <option>Marketing</option>
+          <option>Inteligencia Artificial</option>
+        </select>
+      </div>
+      <div>
+        <label>Mensaje</label>
+        <textarea placeholder="Cuéntanos sobre tu proyecto"></textarea>
+      </div>
+      <button type="submit" class="btn-primary">Enviar mensaje 🚀</button>
+    </form>
+
+    <div class="contact-info reveal">
+      <h2>Rocket S.A.</h2>
+      <div class="info-row"><div class="info-ico">📍</div><span>Lima, Perú</span></div>
+      <div class="info-row"><div class="info-ico">✉️</div><span>hola@rocketsa.com</span></div>
+      <div class="info-row"><div class="info-ico">📞</div><span>+51 999 999 999</span></div>
+
+      <div>
+        <label style="color:#b7b7e8; font-size:.82rem;">Síguenos</label>
+        <div class="social-row">
+          <a href="#" class="social-btn ig" aria-label="Instagram">📸</a>
+          <a href="#" class="social-btn fb" aria-label="Facebook">👍</a>
+          <a href="#" class="social-btn li" aria-label="LinkedIn">💼</a>
+          <a href="#" class="social-btn x" aria-label="X / Twitter">✕</a>
+          <a href="#" class="social-btn wa" aria-label="WhatsApp">💬</a>
+          <a href="#" class="social-btn tk" aria-label="TikTok">🎵</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="logo" style="font-size:1.3rem; margin-bottom:14px;"><span class="rocket-emoji">🚀</span> ROCKET S.A.</div>
+      <p>Consultoría, ventas, marketing e inteligencia artificial para empresas que quieren llegar más lejos.</p>
+    </div>
+    <div>
+      <h4>Servicios</h4>
+      <ul>
+        <li><a href="#servicios">Consultoría</a></li>
+        <li><a href="#servicios">Ventas</a></li>
+        <li><a href="#servicios">Marketing</a></li>
+        <li><a href="#servicios">Inteligencia Artificial</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Empresa</h4>
+      <ul>
+        <li><a href="#nosotros">Nosotros</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+        <li><a href="#inicio">Inicio</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Síguenos</h4>
+      <div class="social-row">
+        <a href="#" class="social-btn ig" aria-label="Instagram">📸</a>
+        <a href="#" class="social-btn fb" aria-label="Facebook">👍</a>
+        <a href="#" class="social-btn li" aria-label="LinkedIn">💼</a>
+        <a href="#" class="social-btn x" aria-label="X / Twitter">✕</a>
+        <a href="#" class="social-btn wa" aria-label="WhatsApp">💬</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 Rocket S.A. Todos los derechos reservados.</div>
+</footer>
+
+<script>
+  // Starfield generation
+  const starsContainer = document.getElementById('stars');
+  const starCount = 90;
+  for(let i=0;i<starCount;i++){
+    const s = document.createElement('div');
+    s.className='star';
+    const size = Math.random()*2.4+0.6;
+    s.style.width = size+'px';
+    s.style.height = size+'px';
+    s.style.top = Math.random()*100+'%';
+    s.style.left = Math.random()*100+'%';
+    s.style.animationDelay = (Math.random()*3)+'s';
+    s.style.animationDuration = (2+Math.random()*3)+'s';
+    starsContainer.appendChild(s);
+  }
+
+  // Burger menu
+  function toggleMenu(){
+    document.getElementById('navbar').classList.toggle('open');
+  }
+  document.querySelectorAll('.nav-links a').forEach(a=>{
+    a.addEventListener('click', ()=> document.getElementById('navbar').classList.remove('open'));
+  });
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('show'); }
+    });
+  }, { threshold:0.15 });
+  revealEls.forEach(el=> io.observe(el));
+
+  // Nav background on scroll
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', ()=>{
+    if(window.scrollY > 40){ nav.style.boxShadow = '0 4px 30px rgba(0,0,0,.35)'; }
+    else{ nav.style.boxShadow = 'none'; }
+  });
+
+  // Form demo
+  function handleSubmit(e){
+    e.preventDefault();
+    alert('¡Gracias! Tu mensaje fue enviado. Este es un formulario de demostración.');
+    e.target.reset();
+    return false;
+  }
+</script>
+
+</body>
+</html>
